@@ -3,6 +3,8 @@ import * as tourController from '../controllers/tourController.js';
 
 const router = express.Router();
 
+router.param('id', tourController.checkId);
+
 router
   .route('/')
   .get(tourController.getAllTour)
