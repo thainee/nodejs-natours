@@ -1,10 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const currentFilePath = fileURLToPath(import.meta.url);
 const toursFilePath = path.join(
-  path.dirname(currentFilePath),
+  import.meta.dirname,
   '..',
   'dev-data',
   'data',
