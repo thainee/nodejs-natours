@@ -1,10 +1,19 @@
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const toursFilePath = `${__dirname}/../dev-data/data/tours-simple.json`;
+const currentFilePath = fileURLToPath(import.meta.url);
+const toursFilePath = path.join(
+  path.dirname(currentFilePath),
+  '..',
+  'dev-data',
+  'data',
+  'tours-simple.json'
+);
 
 const tours = JSON.parse(fs.readFileSync(toursFilePath));
 
-exports.getAllTour = (req, res) => {
+export const getAllTour = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
@@ -16,7 +25,7 @@ exports.getAllTour = (req, res) => {
   });
 };
 
-exports.getTour = (req, res) => {
+export const getTour = (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
@@ -34,7 +43,7 @@ exports.getTour = (req, res) => {
   });
 };
 
-exports.createTour = (req, res) => {
+export const createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = { ...req.body, id: newId };
 
@@ -50,7 +59,7 @@ exports.createTour = (req, res) => {
   });
 };
 
-exports.updateTour = (req, res) => {
+export const updateTour = (req, res) => {
   if (req.params.id * 1 > tours.length) {
     return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
   }
@@ -63,7 +72,7 @@ exports.updateTour = (req, res) => {
   });
 };
 
-exports.deleteTour = (req, res) => {
+export const deleteTour = (req, res) => {
   if (req.params.id * 1 > tours.length) {
     return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
   }
