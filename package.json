@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon --env-file=.env.development server.js",
-    "prod": "node --env-file=.env.production server.js",
+    "prod": "nodemon --env-file=.env.production server.js",
     "debug": "node --env-file=.env.development --inspect server.js"
   },
   "author": "Thai Vo",
