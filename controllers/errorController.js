@@ -5,6 +5,11 @@ const handleCastErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleDuplicateFieldsErrorDB = (err) => {
+  const message = `Duplicate filed value: ${err.keyValue.name}. Please use another value!`;
+  return new AppError(message, 400);
+};
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -43,7 +48,9 @@ export const globalErrorHandler = (err, req, res, next) => {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     let newError = Object.create(err);
-    if (err.name === 'CastError') newError = handleCastErrorDB(err);
+    if (newError.name === 'CastError') newError = handleCastErrorDB(newError);
+    if (newError.code === 11000)
+      newError = handleDuplicateFieldsErrorDB(newError);
     sendErrorProd(newError, res);
   }
 };
