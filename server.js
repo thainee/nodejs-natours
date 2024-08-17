@@ -1,6 +1,12 @@
 import mongoose from 'mongoose';
 import app from './app.js';
 
+process.on('uncaughtException', (err) => {
+  console.log(err.name, err.message);
+  console.log('Unhandled Rejection! 💥 Shutting down...');
+  process.exit(1);
+});
+
 const uri = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
