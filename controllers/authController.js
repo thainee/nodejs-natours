@@ -1,3 +1,4 @@
+import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 import User from './../models/userModel.js';
 import catchAsync from '../utils/catchAsync.js';
@@ -5,7 +6,7 @@ import AppError from './../utils/appError.js';
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
 
@@ -14,7 +15,7 @@ export const signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    passwordConfirm: req.body.passwordConfirm
   });
 
   const token = signToken(newUser._id);
@@ -23,8 +24,8 @@ export const signup = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
     data: {
-      user: newUser,
-    },
+      user: newUser
+    }
   });
 });
 
@@ -45,9 +46,43 @@ export const login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is okay, send token to client
   const token = signToken(user._id);
-  
+
   res.status(200).json({
     status: 'success',
-    token,
+    token
   });
+});
+
+export const protect = catchAsync(async (req, res, next) => {
+  // 1) Getting token and check if it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.substring(7);
+  }
+
+  if (!token) {
+    return next(
+      new AppError('Your are not logged in! Please log in to get access.', 401)
+    );
+  }
+  // 2) Verification token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+
+  // 3) Check if user still exists
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(new AppError('The user belonging to this token no longer exists.', 401));
+  }
+
+  // 4) Check if user changed password after the token was issued
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(new AppError('User recently changed password. Please log in again!', 401));
+  }
+
+  // Grant access to protected route
+  req.user = currentUser;
+  next();
 });
