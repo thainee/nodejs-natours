@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from './../models/userModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from './../utils/appError.js';
+import { sendEmail } from './../utils/email.js';
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -107,7 +108,7 @@ export const restrictTo = (...roles) => {
   };
 };
 
-export const forgotPassword = catchAsync(async (req, res, next) => {
+export const forgotPassword = async (req, res, next) => {
   // 1) Get the user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
@@ -118,11 +119,37 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   // 2) Generate the random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  // 3) Send it to user's email
 
-  res.status(200).json({
-    status: 'success',
-  });
-});
+  // 3) Send it to user's email
+  const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/reset-password/${resetToken}`;
+
+  const message = `Forgot your password? Submit reset your password in the link below:\n${resetURL}\n
+If you didn't forget your password, please ignore this email.`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Natours account password reset',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Email has been sent',
+    });
+  } catch (err) {
+    console.error('Email sending error:', err);
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError(
+        'There was an error sending the email. Try again later!',
+        500,
+      ),
+    );
+  }
+};
 
 export const resetPassword = catchAsync(async (req, res, next) => {});
