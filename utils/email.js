@@ -13,7 +13,7 @@ export const sendEmail = async (options) => {
 
   // 2) Define the email options
   const mailOptions = {
-    from: 'Thai Vo <thaivo@dev.io>',
+    from: `Thai Vo <${process.env.EMAIL_FROM_ADDRESS}>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
