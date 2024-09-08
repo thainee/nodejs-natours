@@ -30,14 +30,12 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 export const signup = catchAsync(async (req, res, next) => {
-  req.body.role = 'user';
   const filteredBody = filterObj(
     req.body,
     'name',
     'email',
     'password',
     'passwordConfirm',
-    'role',
   );
   const newUser = await User.create(filteredBody);
 
