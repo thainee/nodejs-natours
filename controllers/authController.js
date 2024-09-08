@@ -5,6 +5,7 @@ import User from './../models/userModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from './../utils/appError.js';
 import { sendEmail } from './../utils/email.js';
+import { filterObj } from '../utils/helpers.js';
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -29,13 +30,16 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 export const signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    role: req.body.role || 'user',
-  });
+  req.body.role = 'user';
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'password',
+    'passwordConfirm',
+    'role',
+  );
+  const newUser = await User.create(filteredBody);
 
   createSendToken(newUser, 201, res);
 });
