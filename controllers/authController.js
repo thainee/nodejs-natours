@@ -30,13 +30,22 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 export const signup = catchAsync(async (req, res, next) => {
+  if (req.body.role) req.body.role = req.body.role.toLowerCase();
   const filteredBody = filterObj(
     req.body,
     'name',
     'email',
     'password',
     'passwordConfirm',
+    'role',
   );
+
+  if (filteredBody.role) {
+    const allowedRoles = ['user', 'guide', 'lead-guide'];
+    if (!allowedRoles.includes(filteredBody.role))
+      return next(new AppError('Invalid role specified', 400));
+  }
+
   const newUser = await User.create(filteredBody);
 
   createSendToken(newUser, 201, res);
