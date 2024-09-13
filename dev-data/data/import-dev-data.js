@@ -32,7 +32,7 @@ const connectDB = async () => {
 connectDB();
 
 // READ JSON FILE
-const filePath = path.join(import.meta.dirname, 'tours-simple.json');
+const filePath = path.join(import.meta.dirname, 'tours.json');
 const tours = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 // IMPORT DATA INTO DB
