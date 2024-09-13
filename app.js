@@ -4,6 +4,7 @@ import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import xss from 'xss';
 import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
 
 import AppError from './utils/appError.js';
 import { globalErrorHandler } from './controllers/errorController.js';
@@ -44,6 +45,20 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price',
+    ],
+  }),
+);
 
 // Test middleware
 app.use((req, res, next) => {
