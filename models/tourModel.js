@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import slugify from 'slugify';
+// import User from '../models/userModel.js';
 
-const tourSchema = new mongoose.Schema(
+const tourSchema = new Schema(
   {
     name: {
       type: String,
@@ -63,11 +64,6 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a cover image'],
     },
     images: [String],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-      select: false,
-    },
     startDates: [Date],
     secretTour: {
       type: Boolean,
@@ -97,12 +93,17 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   },
 );
+
+tourSchema.path('createdAt').select(false);
+tourSchema.path('updatedAt').select(false);
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
@@ -113,6 +114,13 @@ tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+
+//   next();
+// });
 
 // tourSchema.pre('save', function (next) {
 //   console.log('Will save document...');
@@ -133,7 +141,7 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} miliseconds!`);
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   next();
 });
 
