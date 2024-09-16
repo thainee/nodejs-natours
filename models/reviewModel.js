@@ -11,20 +11,16 @@ const reviewSchema = new Schema(
       min: 1,
       max: 5,
     },
-    tours: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Tour',
-        required: [true, 'Review must belong to a tour'],
-      },
-    ],
-    users: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'Review must belong to a user'],
-      },
-    ],
+    tour: {
+      type: Schema.Types.ObjectId,
+      ref: 'Tour',
+      required: [true, 'Review must belong to a tour'],
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Review must belong to a user'],
+    },
   },
   {
     toJSON: { virtuals: true },
