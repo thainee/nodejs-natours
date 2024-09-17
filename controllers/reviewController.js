@@ -3,7 +3,10 @@ import catchAsync from '../utils/catchAsync.js';
 import Review from '../models/reviewModel.js';
 
 export const getAllReviews = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Review.find(), req.query)
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId };
+
+  const features = new APIFeatures(Review.find(filter), req.query)
     .filter()
     .sort()
     .limitFields()
