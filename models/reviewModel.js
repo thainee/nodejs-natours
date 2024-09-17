@@ -35,10 +35,10 @@ reviewSchema.pre(/^find/, function (next) {
       path: 'user',
       select: 'name photo',
     },
-    {
-      path: 'tour',
-      select: 'name',
-    },
+    // {
+    //   path: 'tour',
+    //   select: 'name',
+    // },
   ]);
 
   next();
