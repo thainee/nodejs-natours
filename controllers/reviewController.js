@@ -1,6 +1,7 @@
 import APIFeatures from '../utils/apiFeatures.js';
 import catchAsync from '../utils/catchAsync.js';
 import Review from '../models/reviewModel.js';
+import * as factory from './handlerFactory.js';
 
 export const getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
@@ -36,3 +37,5 @@ export const createReview = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const deleteReview = factory.deleteOne(Review);
