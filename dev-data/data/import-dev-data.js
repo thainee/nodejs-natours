@@ -2,10 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
 import Tour from './../../models/tourModel.js';
+import User from '../../models/userModel.js';
+import Review from '../../models/reviewModel.js';
 
 const uri = process.env.DATABASE.replace(
   '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
+  process.env.DATABASE_PASSWORD,
 );
 
 const clientOptions = {
@@ -14,32 +16,37 @@ const clientOptions = {
 
 const connectDB = async () => {
   try {
+    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
     await mongoose.connect(uri, clientOptions);
     await mongoose.connection.db.admin().command({ ping: 1 });
     console.log(
-      'Pinged your deployment. You successfully connected to MongoDB!'
+      'Pinged your deployment. You successfully connected to MongoDB!',
     );
-  } catch (error) {
-    console.error('DB connection failed:', error.message);
-    process.exit(1);
+  } catch {
+    console.dir;
   }
-  // finally {
-  //   // Ensures that the client will close when you finish/error
-  //   await mongoose.disconnect();
-  // }
 };
 
 connectDB();
 
 // READ JSON FILE
-const filePath = path.join(import.meta.dirname, 'tours.json');
-const tours = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+const tourFilePath = path.join(import.meta.dirname, 'tours.json');
+const userFilePath = path.join(import.meta.dirname, 'users.json');
+const reviewFilePath = path.join(import.meta.dirname, 'reviews.json');
+
+const tours = JSON.parse(fs.readFileSync(tourFilePath, 'utf8'));
+const users = JSON.parse(fs.readFileSync(userFilePath, 'utf8'));
+const reviews = JSON.parse(fs.readFileSync(reviewFilePath, 'utf8'));
 
 // IMPORT DATA INTO DB
 
 const importData = async () => {
   try {
     await Tour.create(tours);
+    await User.create(users, {
+      validateBeforeSave: false,
+    });
+    await Review.create(reviews);
     console.log('Data imported successfully');
   } catch (err) {
     console.log(err);
@@ -52,6 +59,8 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
+    await User.deleteMany();
+    await Review.deleteMany();
     console.log('Data deleted successfully');
   } catch (err) {
     console.log(err);
