@@ -105,6 +105,9 @@ const tourSchema = new Schema(
 tourSchema.path('createdAt').select(false);
 tourSchema.path('updatedAt').select(false);
 
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
@@ -114,7 +117,6 @@ tourSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
   foreignField: 'tour',
-  justOne: true,
 });
 
 // DOCUMENT MIDDLEWARE: run before .save() and .create()
