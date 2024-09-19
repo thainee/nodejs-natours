@@ -30,7 +30,6 @@ const createSendToken = (user, statusCode, res) => {
 
   res.status(statusCode).json({
     status: 'success',
-    token,
     ...(statusCode === 201
       ? {
           data: {
