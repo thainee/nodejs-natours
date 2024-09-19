@@ -100,12 +100,10 @@ export const getToursWithin = catchAsync(async (req, res, next) => {
     );
   }
 
-  const MILES_TO_RADIANS = 3963.2;
-  const KILOMETERS_TO_RADIANS = 6378.1;
+  const MILE_TO_RADIAN = 3963.2;
+  const KILOMETER_TO_RADIAN = 6378.1;
   const radians =
-    unit === 'mi'
-      ? distance / MILES_TO_RADIANS
-      : distance / KILOMETERS_TO_RADIANS;
+    unit === 'mi' ? distance / MILE_TO_RADIAN : distance / KILOMETER_TO_RADIAN;
 
   const tours = await Tour.find({
     startLocation: {
@@ -120,6 +118,48 @@ export const getToursWithin = catchAsync(async (req, res, next) => {
     results: tours.length,
     data: {
       tours,
+    },
+  });
+});
+
+export const getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(/,\s*/);
+
+  if (!lat || !lng) {
+    return next(
+      new AppError(
+        'Please provide latitude and longtitude in the format lat,lng.',
+        400,
+      ),
+    );
+  }
+
+  const METER_TO_MILE = 0.000621371192;
+  const METER_TO_KILOMETER = 0.001;
+  const multiplier = unit === 'mi' ? METER_TO_MILE : METER_TO_KILOMETER;
+
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    results: distances.length,
+    data: {
+      tours: distances,
     },
   });
 });
