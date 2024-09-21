@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import xss from 'xss';
 import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
+import path from 'node:path';
 
 import AppError from './utils/appError.js';
 import { globalErrorHandler } from './controllers/errorController.js';
@@ -14,7 +15,13 @@ import reviewRouter from './routes/reviewRoutes.js';
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(import.meta.dirname, 'views'));
+
 // 1) GLOBAL MIDDLEWARES
+// Serving static files
+app.use(express.static(path.join(import.meta.dirname, 'public')));
+
 // Set security HTTP headers
 app.use(helmet());
 
@@ -68,6 +75,9 @@ app.use((req, res, next) => {
 });
 
 // 2) ROUTES
+app.get('/', (req, res) => {
+  res.status(200).render('base');
+});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
