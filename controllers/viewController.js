@@ -18,7 +18,7 @@ export const getTour = catchAsync(async (req, res) => {
   const { slug } = req.params;
   const tour = await Tour.findOne({ slug }).populate({
     path: 'reviews',
-    select: 'name photo review'
+    select: 'name photo review rating'
   })
   
   // 2) Build template
