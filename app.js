@@ -6,6 +6,7 @@ import xss from 'xss';
 import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 import path from 'node:path';
+import cookieParser from 'cookie-parser';
 
 import AppError from './utils/appError.js';
 import { globalErrorHandler } from './controllers/errorController.js';
@@ -41,6 +42,7 @@ app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());

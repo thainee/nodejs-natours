@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import './envConfig.js';
 import app from './app.js';
 
 process.on('uncaughtException', (err) => {
@@ -9,7 +10,7 @@ process.on('uncaughtException', (err) => {
 
 const uri = process.env.DATABASE.replace(
   '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
+  process.env.DATABASE_PASSWORD,
 );
 
 const clientOptions = {
