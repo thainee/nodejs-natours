@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { showAlert } from './alert.js';
 
 const formDocument = document.querySelector('.form');
 const baseUrl = formDocument.dataset.base_url;
@@ -8,13 +9,13 @@ async function handleLogin(data) {
     const response = await axios.post(`${baseUrl}/api/v1/users/login`, data);
 
     if (response.data.status === 'success') {
-      alert('Logged in successfully!');
+      showAlert('success', 'Logged in successfully!');
       window.setTimeout(() => {
         location.assign('/');
       }, 500);
     }
   } catch (error) {
-    alert(error.response.data.message);
+    showAlert('error', error.response.data.message);
   }
 }
 

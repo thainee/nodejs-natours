@@ -7,7 +7,6 @@
   "scripts": {
     "start": "nodemon server.js",
     "prod": "nodemon NODE_ENV=production server.js",
-    "debug": "node --inspect server.js",
     "delete": "node dev-data/data/import-dev-data.js --delete",
     "import": "node dev-data/data/import-dev-data.js --import"
   },
