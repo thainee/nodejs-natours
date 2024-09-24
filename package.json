@@ -6,7 +6,7 @@
   "main": "./public/js/bundle.js",
   "scripts": {
     "start": "nodemon server.js",
-    "prod": "nodemon NODE_ENV=production server.js",
+    "prod": "set NODE_ENV=production && nodemon server.js",
     "delete": "node dev-data/data/import-dev-data.js --delete",
     "import": "node dev-data/data/import-dev-data.js --import",
     "watch": "parcel watch ./public/js/index.js --dist-dir ./public/js",
