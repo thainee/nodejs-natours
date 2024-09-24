@@ -1,27 +1,36 @@
 /* eslint-disable */
 import { showAlert } from './alert.js';
 
-const formDocument = document.querySelector('.form');
-const baseUrl = formDocument.dataset.base_url;
-
-async function handleLogin(data) {
+export async function handleLogin(data) {
   try {
-    const response = await axios.post(`${baseUrl}/api/v1/users/login`, data);
+    const response = await axios.post(
+      `${process.env.BASE_URL}/api/v1/users/login`,
+      data,
+    );
 
     if (response.data.status === 'success') {
       showAlert('success', 'Logged in successfully!');
       window.setTimeout(() => {
         location.assign('/');
-      }, 500);
+      }, 800);
     }
   } catch (error) {
     showAlert('error', error.response.data.message);
   }
 }
 
-formDocument.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  handleLogin({ email, password });
-});
+export async function handleLogout() {
+  try {
+    const response = await axios.get(
+      `${process.env.BASE_URL}/api/v1/users/logout`,
+    );
+
+    if (response.data.status === 'success') {
+      location.reload(true);
+      showAlert('success', 'Logged out successfully!');
+    }
+  } catch (error) {
+    console.log(error);
+    showAlert('error', error.response.data.message);
+  }
+}

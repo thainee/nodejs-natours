@@ -1,5 +1,7 @@
 extend base
 
+
+
 block content
     main.main
         .login-form
@@ -13,8 +15,3 @@ block content
                     input#password.form__input(type='password' placeholder='••••••••', required, minlength='8')
                 .form__group
                     button.btn.btn--green Login
-
-block append script
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js')
-    script(type='module' src='/js/alert.js')
-    script(type='module' src='/js/login.js')
