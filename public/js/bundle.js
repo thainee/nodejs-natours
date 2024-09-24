@@ -31,7 +31,6 @@ async function $e33d9ff231aec008$export$297d1113e3afbc21() {
             (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", "Logged out successfully!");
         }
     } catch (error) {
-        console.log(error);
         (0, $fc9f18cd978afa5b$export$de026b00723010c1)("error", error.response.data.message);
     }
 }

@@ -25,7 +25,28 @@ app.set('views', path.join(import.meta.dirname, 'views'));
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 // Set security HTTP headers
-app.use(helmet());
+const cspConfig = {
+  directives: {
+    'default-src': ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+    'script-src': [
+      "'self'",
+      'https://cdnjs.cloudflare.com',
+      'https://api.mapbox.com',
+    ],
+    'style-src': [
+      "'self'",
+      'https://api.mapbox.com',
+      'https://fonts.googleapis.com',
+    ],
+    'worker-src': ["'self'", 'blob:'],
+  },
+};
+
+app.use(
+  helmet({
+    contentSecurityPolicy: cspConfig,
+  }),
+);
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {

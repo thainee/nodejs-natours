@@ -1,3 +1,6 @@
+block append head
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js")
+
 header.header
     nav.nav.nav--tours
         a.nav__el(href="/") All tours
@@ -18,6 +21,3 @@ header.header
         else
             a.nav__el(href="/login") Log in
             a.nav__el.nav__el--cta(href="/signup") Sign up
-
-block append head
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js")

@@ -30,7 +30,6 @@ export async function handleLogout() {
       showAlert('success', 'Logged out successfully!');
     }
   } catch (error) {
-    console.log(error);
     showAlert('error', error.response.data.message);
   }
 }
