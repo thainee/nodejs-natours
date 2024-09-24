@@ -130,6 +130,7 @@ export const protect = catchAsync(async (req, res, next) => {
 
   // Grant access to protected route
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 
@@ -137,29 +138,29 @@ export const protect = catchAsync(async (req, res, next) => {
 export const isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
-      // 1) Verification token
-      const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
-        process.env.JWT_SECRET_KEY,
-      );
+    // 1) Verification token
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET_KEY,
+    );
 
-      // 2) Check if user still exists
-      const currentUser = await User.findById(decoded.id);
-      if (!currentUser) {
+    // 2) Check if user still exists
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
         return next();
-      }
+    }
 
-      // 3) Check if user changed password after the token was issued
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
+    // 3) Check if user changed password after the token was issued
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();
-      }
+    }
 
-      // There is a logged in user
-      res.locals.user = currentUser;
+    // There is a logged in user
+    res.locals.user = currentUser;
     } catch (err) {
       err;
-      return next();
-    }
+    return next();
+  }
   }
 
   next();

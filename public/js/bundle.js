@@ -81,7 +81,7 @@ if ($1cd085a7ac742057$var$mapBox) {
     const locations = JSON.parse($1cd085a7ac742057$var$mapBox.dataset.locations);
     (0, $f6b1c9ed51ec7162$export$4c5dd147b21b9176)(locations);
 }
-if ($1cd085a7ac742057$var$loginForm) addEventListener("submit", async (e)=>{
+if ($1cd085a7ac742057$var$loginForm) $1cd085a7ac742057$var$loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -90,9 +90,7 @@ if ($1cd085a7ac742057$var$loginForm) addEventListener("submit", async (e)=>{
         password: password
     });
 });
-if ($1cd085a7ac742057$var$logoutBtn) addEventListener("click", async ()=>{
-    (0, $e33d9ff231aec008$export$297d1113e3afbc21)();
-});
+if ($1cd085a7ac742057$var$logoutBtn) $1cd085a7ac742057$var$logoutBtn.addEventListener("click", (0, $e33d9ff231aec008$export$297d1113e3afbc21));
 
 
 //# sourceMappingURL=bundle.js.map
