@@ -1,6 +1,8 @@
-import Tour from '../models/tourModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
+import Tour from '../models/tourModel.js';
+import User from '../models/userModel.js';
+import { filterObj } from '../utils/helpers.js';
 
 export const getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
@@ -34,7 +36,7 @@ export const getTour = catchAsync(async (req, res, next) => {
   });
 });
 
-export const login = (req, res) => {
+export const getLoginForm = (req, res) => {
   res.status(200).render('login', {
     title: 'Login',
   });
@@ -45,3 +47,16 @@ export const getAccount = (req, res) => {
     title: 'Account',
   });
 };
+
+export const updateUserData = catchAsync(async (req, res, next) => {
+  const data = filterObj(req.body, 'name', 'email');
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).render('account', {
+    title: 'Account',
+    user: updatedUser,
+  });
+});

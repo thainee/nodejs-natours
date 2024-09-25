@@ -6,10 +6,16 @@ const router = express.Router();
 
 router.get('/me', authController.protect, viewController.getAccount);
 
+router.post(
+  '/submit-user-data',
+  authController.protect,
+  viewController.updateUserData,
+);
+
 router.use(authController.isLoggedIn);
 
 router.get('/', viewController.getOverview);
 router.get('/tours/:slug', viewController.getTour);
-router.get('/login', viewController.login);
+router.get('/login', viewController.getLoginForm);
 
 export default router;
