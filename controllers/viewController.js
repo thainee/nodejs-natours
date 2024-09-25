@@ -47,16 +47,3 @@ export const getAccount = (req, res) => {
     title: 'Account',
   });
 };
-
-export const updateUserData = catchAsync(async (req, res, next) => {
-  const data = filterObj(req.body, 'name', 'email');
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, data, {
-    new: true,
-    runValidators: true,
-  });
-
-  res.status(200).render('account', {
-    title: 'Account',
-    user: updatedUser,
-  });
-});
