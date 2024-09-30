@@ -28,9 +28,11 @@ if (userSettingsForm) {
   userSettingsForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     document.querySelector('.btn--save-settings').textContent = 'Updating...';
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    await updateUserAccount({ name, email }, 'data');
+    const form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('password', document.getElementById('password').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    await updateUserAccount(form, 'data');
     document.querySelector('.btn--save-settings').textContent = 'Save settings';
   });
 }
