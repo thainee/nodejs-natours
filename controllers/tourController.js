@@ -1,6 +1,6 @@
 import multer from 'multer';
 import sharp from 'sharp';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import Tour from '../models/tourModel.js';
 import AppError from '../utils/appError.js';
 import catchAsync from '../utils/catchAsync.js';
@@ -44,14 +44,14 @@ export const resizeTourImages = catchAsync(async (req, res, next) => {
     // Cover image
     processImage(
       req.files.imageCover[0],
-      `tour-${req.params.id}-cover.jpg`,
+      `tour-${req.params.id}-${Date.now()}-cover.jpg`,
       2000,
       1333,
     ),
     ...req.files.images.map((file, i) => {
       return processImage(
         file,
-        `tour-${req.params.id}-${i + 1}.jpg`,
+        `tour-${req.params.id}-${Date.now()}-${i + 1}.jpg`,
         2000,
         1333,
       );
@@ -62,7 +62,7 @@ export const resizeTourImages = catchAsync(async (req, res, next) => {
 
   req.body.imageCover = processedImages[0];
   req.body.images = processedImages.slice(1);
-  
+
   next();
 });
 
