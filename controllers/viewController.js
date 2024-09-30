@@ -1,8 +1,6 @@
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
 import Tour from '../models/tourModel.js';
-import User from '../models/userModel.js';
-import { filterObj } from '../utils/helpers.js';
 
 export const getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection

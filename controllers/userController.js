@@ -1,8 +1,35 @@
+import multer from 'multer';
+
 import User from '../models/userModel.js';
 import AppError from '../utils/appError.js';
 import catchAsync from '../utils/catchAsync.js';
 import { filterObj } from '../utils/helpers.js';
 import * as factory from './handlerFactory.js';
+
+const multerDiskStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/users');
+  },
+  filename: function (req, file, cb) {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerDiskStorage,
+  fileFilter: multerFilter,
+});
+
+export const uploadUserPhoto = upload.single('photo');
 
 export const getMe = (req, res, next) => {
   req.params.id = req.user.id;
@@ -10,6 +37,9 @@ export const getMe = (req, res, next) => {
 };
 
 export const updateMe = catchAsync(async (req, res, next) => {
+  console.log(req.file);
+  console.log(req.body);
+
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
