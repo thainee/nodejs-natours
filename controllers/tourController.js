@@ -1,7 +1,70 @@
+import multer from 'multer';
+import sharp from 'sharp';
+import { promises as fs } from 'fs';
 import Tour from '../models/tourModel.js';
 import AppError from '../utils/appError.js';
 import catchAsync from '../utils/catchAsync.js';
 import * as factory from './handlerFactory.js';
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+export const uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+export const resizeTourImages = catchAsync(async (req, res, next) => {
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  const processImage = async (file, filename, width, height) => {
+    const buffer = await sharp(file.buffer)
+      .resize(width, height)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toBuffer();
+
+    await fs.writeFile(`public/img/tours/${filename}`, buffer);
+    return filename;
+  };
+
+  const imageTasks = [
+    // Cover image
+    processImage(
+      req.files.imageCover[0],
+      `tour-${req.params.id}-cover.jpg`,
+      2000,
+      1333,
+    ),
+    ...req.files.images.map((file, i) => {
+      return processImage(
+        file,
+        `tour-${req.params.id}-${i + 1}.jpg`,
+        2000,
+        1333,
+      );
+    }),
+  ];
+
+  const processedImages = await Promise.all(imageTasks);
+
+  req.body.imageCover = processedImages[0];
+  req.body.images = processedImages.slice(1);
+  
+  next();
+});
 
 export const aliasTopTours = async (req, res, next) => {
   req.query.limit = '5';

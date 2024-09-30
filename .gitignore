@@ -3,3 +3,4 @@
 /.idea
 /.parcel*
 /public/js/bundle*
+/public/img/*
