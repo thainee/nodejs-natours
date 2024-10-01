@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import User from './../models/userModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from './../utils/appError.js';
-import { sendEmail } from './../utils/email.js';
+import Email from './../utils/email.js';
 import { filterObj } from '../utils/helpers.js';
 
 const signToken = (id) => {
@@ -58,6 +58,9 @@ export const signup = catchAsync(async (req, res, next) => {
   }
 
   const newUser = await User.create(filteredBody);
+
+  const url = `${process.env.BASE_URL}/me`;
+  await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
 });
@@ -138,29 +141,29 @@ export const protect = catchAsync(async (req, res, next) => {
 export const isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
-    // 1) Verification token
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET_KEY,
-    );
+      // 1) Verification token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET_KEY,
+      );
 
-    // 2) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
         return next();
-    }
+      }
 
-    // 3) Check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();
-    }
+      }
 
-    // There is a logged in user
-    res.locals.user = currentUser;
+      // There is a logged in user
+      res.locals.user = currentUser;
     } catch (err) {
       err;
-    return next();
-  }
+      return next();
+    }
   }
 
   next();
@@ -197,11 +200,11 @@ export const forgotPassword = async (req, res, next) => {
 If you didn't forget your password, please ignore this email.`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Natours account password reset',
-      message,
-    });
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: 'Natours account password reset',
+    //   message,
+    // });
 
     res.status(200).json({
       status: 'success',

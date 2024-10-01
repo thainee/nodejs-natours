@@ -31,12 +31,13 @@ class Email {
   async send(template, subject) {
     // 1) Render HTML based on a pug template
     const fileUrl = path.join(
-      import.meta.url,
+      import.meta.dirname,
       '..',
       'views',
       'emails',
       `${template}.pug`,
     );
+    console.log(fileUrl);
     const html = pug.renderFile(fileUrl, {
       firstName: this.firstName,
       url: this.url,
