@@ -60,6 +60,10 @@ class Email {
   async sendWelcome() {
     await this.send('welcome', 'Welcome to the Natours Family!');
   }
+
+  async sendResetPassword() {
+    await this.send('resetPassword', 'Reset your Natours password!');
+  }
 }
 
 export default Email;

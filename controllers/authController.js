@@ -59,7 +59,7 @@ export const signup = catchAsync(async (req, res, next) => {
 
   const newUser = await User.create(filteredBody);
 
-  const url = `${process.env.BASE_URL}/me`;
+  const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -196,15 +196,8 @@ export const forgotPassword = async (req, res, next) => {
   // 3) Send it to user's email
   const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/reset-password/${resetToken}`;
 
-  const message = `Forgot your password? Submit reset your password in the link below:\n${resetURL}\n
-If you didn't forget your password, please ignore this email.`;
-
   try {
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: 'Natours account password reset',
-    //   message,
-    // });
+    await new Email(user, resetURL).sendResetPassword();
 
     res.status(200).json({
       status: 'success',
