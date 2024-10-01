@@ -8,13 +8,21 @@ class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Thai Vo <${process.env.EMAIL_FROM_ADDRESS}>`;
+    this.from = `Thai Vo <${process.env.MAILERSEND_USERNAME}>`;
   }
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // Sendgrid
-      return 1;
+      return nodemailer.createTransport({
+        host: process.env.MAILERSEND_HOST,
+        port: process.env.MAILERSEND_PORT,
+        secure: false,
+        auth: {
+          user: process.env.MAILERSEND_USERNAME,
+          pass: process.env.MAILERSEND_PASSWORD,
+        },
+      });
     }
 
     return nodemailer.createTransport({
