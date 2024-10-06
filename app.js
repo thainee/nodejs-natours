@@ -33,6 +33,7 @@ const cspConfig = {
       "'self'",
       'https://cdnjs.cloudflare.com',
       'https://api.mapbox.com',
+      'https://js.stripe.com',
     ],
     'style-src': [
       "'self'",
