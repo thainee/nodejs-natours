@@ -28,6 +28,8 @@ const bookingSchema = new Schema(
 
 bookingSchema.pre(/^find/, function (next) {
   this.populate([{ path: 'tour', select: 'name' }, 'user']);
+
+  next();
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

@@ -6,6 +6,7 @@ import * as bookingController from '../controllers/bookingController.js';
 const router = express.Router();
 
 router.get('/me', authController.protect, viewController.getAccount);
+router.get('/my-tours', authController.protect, viewController.getMyTours);
 
 router.use(authController.isLoggedIn);
 
