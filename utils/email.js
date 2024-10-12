@@ -45,7 +45,6 @@ class Email {
       'emails',
       `${template}.pug`,
     );
-    console.log(fileUrl);
     const html = pug.renderFile(fileUrl, {
       firstName: this.firstName,
       url: this.url,

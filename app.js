@@ -7,6 +7,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 import path from 'node:path';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 
 import AppError from './utils/appError.js';
 import { globalErrorHandler } from './controllers/errorController.js';
@@ -94,6 +95,8 @@ app.use(
     ],
   }),
 );
+
+app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {
