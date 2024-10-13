@@ -19,6 +19,8 @@ import bookingRouter from './routes/bookingRoutes.js';
 
 const app = express();
 
+app.enable('trust proxy');
+
 app.set('view engine', 'pug');
 app.set('views', path.join(import.meta.dirname, 'views'));
 
