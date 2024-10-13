@@ -2,6 +2,7 @@ import { handleLogin, handleLogout } from './login.js';
 import { displayMap } from './mapbox.js';
 import { updateUserAccount } from './updateData.js';
 import { bookTour } from './stripe.js';
+import { showAlert } from './alert.js';
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form--login');
@@ -66,6 +67,9 @@ if (bookBtn) {
     e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
     bookTour(tourId);
-    e.target.textContent = 'Book tour now!'
+    e.target.textContent = 'Book tour now!';
   });
 }
+
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alert) showAlert('success', alertMessage, 10);

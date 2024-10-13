@@ -2,11 +2,11 @@
     const el = document.querySelector(".alert");
     if (el) el.parentElement.removeChild(el);
 };
-const $fc9f18cd978afa5b$export$de026b00723010c1 = (type, msg)=>{
+const $fc9f18cd978afa5b$export$de026b00723010c1 = (type, msg, time = 3)=>{
     $fc9f18cd978afa5b$export$516836c6a9dfc573();
     const markup = `<div class='alert alert--${type}'>${msg}</div>`;
     document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
-    window.setTimeout($fc9f18cd978afa5b$export$516836c6a9dfc573, 3000);
+    window.setTimeout($fc9f18cd978afa5b$export$516836c6a9dfc573, time * 3);
 };
 
 
@@ -102,6 +102,7 @@ const $245ad133cda49593$export$8d5bdbf26681c0c2 = async (tourId)=>{
 };
 
 
+
 // DOM ELEMENTS
 const $1cd085a7ac742057$var$loginForm = document.querySelector(".form--login");
 const $1cd085a7ac742057$var$mapBox = document.getElementById("map");
@@ -156,6 +157,8 @@ if ($1cd085a7ac742057$var$bookBtn) $1cd085a7ac742057$var$bookBtn.addEventListene
     (0, $245ad133cda49593$export$8d5bdbf26681c0c2)(tourId);
     e.target.textContent = "Book tour now!";
 });
+const $1cd085a7ac742057$var$alertMessage = document.querySelector("body").dataset.alert;
+if (alert) (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", $1cd085a7ac742057$var$alertMessage, 10);
 
 
 //# sourceMappingURL=bundle.js.map
