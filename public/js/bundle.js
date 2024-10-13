@@ -158,7 +158,7 @@ if ($1cd085a7ac742057$var$bookBtn) $1cd085a7ac742057$var$bookBtn.addEventListene
     e.target.textContent = "Book tour now!";
 });
 const $1cd085a7ac742057$var$alertMessage = document.querySelector("body").dataset.alert;
-if (alert) (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", $1cd085a7ac742057$var$alertMessage, 10);
+if ($1cd085a7ac742057$var$alertMessage) (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", $1cd085a7ac742057$var$alertMessage, 10);
 
 
 //# sourceMappingURL=bundle.js.map
