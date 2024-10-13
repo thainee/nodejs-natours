@@ -8,6 +8,7 @@ import hpp from 'hpp';
 import path from 'node:path';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import cors from 'cors';
 
 import AppError from './utils/appError.js';
 import { globalErrorHandler } from './controllers/errorController.js';
@@ -25,6 +26,11 @@ app.set('view engine', 'pug');
 app.set('views', path.join(import.meta.dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
+// Implement CORS
+app.use(cors());
+
+app.options('*', cors());
+
 // Serving static files
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
