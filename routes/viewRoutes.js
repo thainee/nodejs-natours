@@ -1,7 +1,7 @@
 import express from 'express';
 import * as viewController from '../controllers/viewController.js';
 import * as authController from '../controllers/authController.js';
-import * as bookingController from '../controllers/bookingController.js';
+// import * as bookingController from '../controllers/bookingController.js';
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.use(authController.isLoggedIn);
 
 router.get(
   '/',
-  bookingController.createBookingCheckout,
+  // bookingController.createBookingCheckout,
   viewController.getOverview,
 );
 router.get('/tours/:slug', viewController.getTour);

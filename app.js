@@ -17,6 +17,7 @@ import userRouter from './routes/userRoutes.js';
 import reviewRouter from './routes/reviewRoutes.js';
 import viewRouter from './routes/viewRoutes.js';
 import bookingRouter from './routes/bookingRoutes.js';
+import * as bookingController from './controllers/bookingController.js';
 
 const app = express();
 
@@ -71,6 +72,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again after 15 minutes!',
 });
 app.use('/api', limiter);
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
