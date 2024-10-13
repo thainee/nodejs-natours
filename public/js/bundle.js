@@ -12,7 +12,7 @@ const $fc9f18cd978afa5b$export$de026b00723010c1 = (type, msg)=>{
 
 async function $e33d9ff231aec008$export$da4fc2bf424da4ca(data) {
     try {
-        const response = await axios.post(`${"http://127.0.0.1:3000"}/api/v1/users/login`, data);
+        const response = await axios.post(`${"https://natours123-0f77af77914d.herokuapp.com/"}/api/v1/users/login`, data);
         if (response.data.status === "success") {
             (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", "Logged in successfully!");
             window.setTimeout(()=>{
@@ -25,7 +25,7 @@ async function $e33d9ff231aec008$export$da4fc2bf424da4ca(data) {
 }
 async function $e33d9ff231aec008$export$297d1113e3afbc21() {
     try {
-        const response = await axios.get(`${"http://127.0.0.1:3000"}/api/v1/users/logout`);
+        const response = await axios.get(`${"https://natours123-0f77af77914d.herokuapp.com/"}/api/v1/users/logout`);
         if (response.data.status === "success") {
             location.reload(true);
             (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", "Logged out successfully!");
@@ -75,7 +75,7 @@ async function $e33d9ff231aec008$export$297d1113e3afbc21() {
 /* eslint-disable */ 
 async function $fcd8fe517d2235bd$export$fd44816d6aa79c1b(data, type) {
     try {
-        let url = `${"http://127.0.0.1:3000"}/api/v1/users`;
+        let url = `${"https://natours123-0f77af77914d.herokuapp.com/"}/api/v1/users`;
         url += type === "password" ? "/update-password" : "/update-me";
         const res = await axios.patch(url, data);
         if (res.data.status === "success") (0, $fc9f18cd978afa5b$export$de026b00723010c1)("success", `${type} updated successfully!`);
@@ -86,11 +86,11 @@ async function $fcd8fe517d2235bd$export$fd44816d6aa79c1b(data, type) {
 
 
 /* eslint-disable */ 
-var $245ad133cda49593$var$stripe = Stripe(undefined);
+var $245ad133cda49593$var$stripe = Stripe("pk_test_51Q5SvHFW01zFkAFSFlZgBrFewqe0fJM7qTB6y5wmVPQLdrxJF9JC7l1wH6ZOqxP3GuOmOSgJwxSe5rzuTDuPuxFY00zX3dqOg0");
 const $245ad133cda49593$export$8d5bdbf26681c0c2 = async (tourId)=>{
     try {
         // 1) Get checkout session from API
-        const session = await axios.get(`${"http://127.0.0.1:3000"}/api/v1/bookings/checkout-session/${tourId}`);
+        const session = await axios.get(`${"https://natours123-0f77af77914d.herokuapp.com/"}/api/v1/bookings/checkout-session/${tourId}`);
         // 2) Create checkout form + charge credit card
         await $245ad133cda49593$var$stripe.redirectToCheckout({
             sessionId: session.data.session.id
