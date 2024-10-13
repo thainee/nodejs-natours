@@ -5,7 +5,8 @@
   "type": "module",
   "main": "./public/js/bundle.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "prod": "set NODE_ENV=production && nodemon server.js",
     "delete": "node dev-data/data/import-dev-data.js --delete",
     "import": "node dev-data/data/import-dev-data.js --import",
